@@ -6,7 +6,7 @@ export class HomeMapController {
     constructor(private readonly homeMapService: HomeMapService) {}
 
     @Get()
-    async getFires(): Promise<{ gps_data: {x: number, y:number}[]}> {
+    async getFires(): Promise<{ sat_data: {x: number, y:number}[]}> {
         return await this.homeMapService.fetchHomeMapData();
     }
 }

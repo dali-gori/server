@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class HomeMapService {
-    async fetchHomeMapData(): Promise<{ gps_data: { x: number; y: number }[] }> {
+    async fetchHomeMapData(): Promise<{ sat_data: { x: number; y: number }[] }> {
         // Example bounding box for Bulgaria
         const west = 22.357;
         const south = 41.235;
@@ -17,11 +17,11 @@ export class HomeMapService {
         const csv = await response.text();
 
         const lines = csv.trim().split('\n').slice(1);
-        const gps_data = lines.map(line => {
+        const sat_data = lines.map(line => {
             const [ latitude, longitude, brightness, scan, track, acq_date, acq_time, satellite, instrument, confidence, version, bright_t31, frp, daynight ] = line.split(',');
             return { x: parseFloat(latitude), y: parseFloat(longitude), date: acq_date, time: acq_time, confidence: confidence };
         });
 
-        return { gps_data };
+        return { sat_data };
     }
 }
