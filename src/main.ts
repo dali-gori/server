@@ -1,4 +1,3 @@
-import './polyfills/crypto-global';  // <-- must be first
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
