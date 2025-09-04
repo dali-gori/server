@@ -10,17 +10,27 @@ import {HomeMapModule} from "./home-map/home-map.module";
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: () => {
-        const url = process.env.DATABASE_PUBLIC_URL!;
-        // If your DATABASE_URL already contains sslmode=require, TypeORM will honor it.
-        // Some environments still need an explicit ssl object:
-        const useExplicitSSL = !url.includes('sslmode=require');
+        const url =
+            process.env.DATABASE_URL ??
+            process.env.DATABASE_PUBLIC_URL ??
+            process.env.POSTGRES_URL;
+
+        if (!url) {
+          throw new Error(
+              'Database URL is not set. Expected env var DATABASE_URL (or DATABASE_PUBLIC_URL/POSTGRES_URL).'
+          );
+        }
+
+        const hasSslModeRequire = /sslmode=require/i.test(url);
+        const useExplicitSSL =
+            process.env.DATABASE_SSL === 'true' || !hasSslModeRequire;
         return {
           type: 'postgres',
           url,
-          autoLoadEntities: true,      // or list entities: [User, Post, ...]
-          synchronize: false,          // true for quick dev only; use migrations in real projects
+          autoLoadEntities: true,
+          synchronize: false,
           ssl: useExplicitSSL
-              ? { rejectUnauthorized: false } // Railway uses trusted certs; false is a pragmatic default
+              ? { rejectUnauthorized: false }
               : undefined,
         };
       },
