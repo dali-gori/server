@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn, Index
+} from 'typeorm';
+import {User} from "../users/user.entity";
 
 @Entity({ name: 'saved_locations' })
 export class SavedLocation {
@@ -19,4 +28,14 @@ export class SavedLocation {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @Index()
+  @Column({ name: 'user_id', type: 'int' })
+  userId: number;
+
+  @ManyToOne(() => User, user => user.savedLocations, {
+    onDelete: 'CASCADE', // delete locations when user is deleted
+  })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }
