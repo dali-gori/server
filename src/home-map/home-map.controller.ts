@@ -14,7 +14,7 @@ export class HomeMapController {
             lng: number,
             date: string,
             time: string,
-            confidence: number
+            confidence: string
         }[],
         report_data: {
             lat: number;

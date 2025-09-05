@@ -14,7 +14,7 @@ export class HomeMapService {
                 lng: number,
                 date: string,
                 time: string,
-                confidence: number
+                confidence: string // Confidence is string when using VIIRS_NOAA20_NRT and number when using MODIS_NRT
             }[],
             report_data: {
                 lat: number;
@@ -41,8 +41,9 @@ export class HomeMapService {
 
         const lines = csv.trim().split('\n').slice(1);
         const sat_data = lines.map(line => {
-            const [latitude, longitude, brightness, scan, track, acq_date, acq_time, satellite, instrument, confidence, version, bright_t31, frp, daynight] = line.split(',');
-            return { lat: parseFloat(latitude), lng: parseFloat(longitude), date: acq_date, time: acq_time, confidence: parseFloat(confidence) };
+            const [latitude, longitude, bright_ti4, scan, track, acq_date, acq_time, satellite, instrument, confidence, version, bright_ti5, frp, daynight] = line.split(',');
+            if(confidence == "l") return;
+            return { lat: parseFloat(latitude), lng: parseFloat(longitude), date: acq_date, time: acq_time, confidence: confidence};
         });
 
         const report_data = await this.reportService.getAllReports();
