@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {ConfigModule} from "@nestjs/config";
 import {HomeMapModule} from "./home-map/home-map.module";
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import {HomeMapModule} from "./home-map/home-map.module";
         };
       },
     }),
-    HomeMapModule
+    HomeMapModule,
+    ReportsModule
   ],
 })
 export class AppModule {}

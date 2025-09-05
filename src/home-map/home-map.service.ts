@@ -1,8 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { ReportsService } from 'src/reports/reports.service';
 
 @Injectable()
 export class HomeMapService {
-    async fetchHomeMapData(): Promise<{ sat_data: { lat: number; lng: number, date: string, time: string, confidence: number }[] }> {
+    constructor(
+        private readonly reportService: ReportsService,
+    ) { }
+    async fetchHomeMapData(): Promise<
+        {
+            sat_data:
+            {
+                lat: number;
+                lng: number,
+                date: string,
+                time: string,
+                confidence: number
+            }[],
+            report_data: {
+                lat: number;
+                lng: number;
+                statusHistory: {
+                    created_at: Date;
+                    reportStatus: string;
+                    reportStatusId: number;
+                }[]
+            }[]
+        }> {
         // Example bounding box for Bulgaria
         const west = 22;
         const south = 41;
@@ -10,18 +33,20 @@ export class HomeMapService {
         const north = 45;
 
         const url = `${process.env.NASA_API_URL}/` +
-            `${process.env.FIRMS_API_KEY}/MODIS_NRT/` +
-            `${west},${south},${east},${north}/1`;
+            `${process.env.FIRMS_API_KEY}/${process.env.NASA_DATA_SOURCE}/` +
+            `${west},${south},${east},${north}/2`;
 
         const response = await fetch(url);
         const csv = await response.text();
 
         const lines = csv.trim().split('\n').slice(1);
         const sat_data = lines.map(line => {
-            const [ latitude, longitude, brightness, scan, track, acq_date, acq_time, satellite, instrument, confidence, version, bright_t31, frp, daynight ] = line.split(',');
+            const [latitude, longitude, brightness, scan, track, acq_date, acq_time, satellite, instrument, confidence, version, bright_t31, frp, daynight] = line.split(',');
             return { lat: parseFloat(latitude), lng: parseFloat(longitude), date: acq_date, time: acq_time, confidence: parseFloat(confidence) };
         });
 
-        return { sat_data };
+        const report_data = await this.reportService.getAllReports();
+
+        return { sat_data, report_data };
     }
 }
