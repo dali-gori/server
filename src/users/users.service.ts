@@ -21,10 +21,4 @@ export class UsersService {
         return this.repo.findOne({ where: { id } });
     }
 
-    async findByEmailWithRole(email: string) {
-        return this.repo.findOne({
-            where: { email },
-            relations: ['role'],   // 👈 ensures we get role info
-        });
-    }
 }
