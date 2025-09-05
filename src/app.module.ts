@@ -1,10 +1,11 @@
-(global as any).crypto = (global as any).crypto ?? require('crypto').webcrypto;
+// (global as any).crypto = (global as any).crypto ?? require('crypto').webcrypto;
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {ConfigModule} from "@nestjs/config";
 import {HomeMapModule} from "./home-map/home-map.module";
 import { ReportsModule } from './reports/reports.module';
+import {AuthModule} from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ReportsModule } from './reports/reports.module';
         };
       },
     }),
+    AuthModule,
     HomeMapModule,
     ReportsModule
   ],
