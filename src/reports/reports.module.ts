@@ -15,12 +15,14 @@ import { Item } from 'src/items/item.entity';
 import { ItemDonation } from 'src/item-donations/item-donation.entity';
 import { ItemStatus } from 'src/item-statuses/item-status.entity';
 import { SavedLocation } from 'src/saved-locations/saved-location.entity';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { ExistsInDbConstraint } from 'src/utils/exists.constraint';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Report, User, Role, Subscription, Region, Device, StatusHistory, ReportStatus, Item, ItemDonation, ItemStatus, SavedLocation]),
   ],
-  providers: [ReportsService],
+  providers: [ReportsService, ExistsInDbConstraint],
   controllers: [ReportsController],
   exports: [ReportsService],
 })
