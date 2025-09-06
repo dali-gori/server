@@ -36,7 +36,6 @@ export class ReportsService {
                 radius: report.radius,
                 statusText: latest?.reportStatus?.name ?? null,
                 latestStatusId: latest?.reportStatus?.id ?? null,
-                radius: report.radius,
                 statusHistory: report.statusHistory.map((history) => ({
                     created_at: history.createdAt,
                     reportStatus: history.reportStatus?.name,
