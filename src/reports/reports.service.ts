@@ -6,6 +6,7 @@ import { NewReportDto } from './dtos/newReportModel.dto';
 import { StatusHistory } from 'src/status-history/status-history.entity';
 import { UpdateReportDto } from './dtos/updateReportModel.dto';
 
+const SPREADING_STATUS_ID = 4;
 
 @Injectable()
 export class ReportsService {
@@ -17,8 +18,10 @@ export class ReportsService {
       ) {}
     async getAllReports() {
         const reports = await this.reportRepository.find({
-            relations: ['statusHistory', 'statusHistory.reportStatus'],
+            relations: ['statusHistory', 'statusHistory.reportStatus', 'items', 'items.donations'],
         });
+
+        console.log(reports);
     
         return reports.map((report) => {
             // sort histories by createdAt to get the latest
@@ -31,11 +34,15 @@ export class ReportsService {
                 lat: report.geo_y,
                 lng: report.geo_x,
                 statusText: latest?.reportStatus?.name ?? null,
+                latestStatusId: latest?.reportStatus?.id ?? null,
+                radius: report.radius,
                 statusHistory: report.statusHistory.map((history) => ({
                     created_at: history.createdAt,
                     reportStatus: history.reportStatus?.name,
                     reportStatusId: history.statusId,
-                })),
+                }),
+                ),
+                items: report.items,
             };
         });
     }
@@ -56,7 +63,7 @@ export class ReportsService {
 
         const initialStatus = this.statusHistoryRepository.create({
             report: savedReport,
-            statusId: 2,
+            statusId: SPREADING_STATUS_ID,
             createdAt: now,
             updatedAt: now,
         });

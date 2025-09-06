@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RoleGuard } from 'src/auth/roles.guard';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/users/user.entity';
+import { Item } from 'src/items/item.entity';
 
 @Controller('item-donations')
 export class ItemDonationsController {
@@ -19,8 +20,7 @@ export class ItemDonationsController {
      */
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    @UseGuards(JwtAuthGuard, RoleGuard(1))
-    create(@Body() createItemDonationDto: CreateItemDonationDto): Promise<ItemDonation> {
+    create(@Body() createItemDonationDto: CreateItemDonationDto): Promise<{donation: ItemDonation, item: Item}> {
         return this.itemDonationsService.create(createItemDonationDto);
     }
 
@@ -31,7 +31,7 @@ export class ItemDonationsController {
      * @returns A Promise of the updated ItemDonation.
      */
     @Patch(':id/status')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RoleGuard(2))
     updateStatus(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateItemDonationDto: UpdateItemDonationDto,

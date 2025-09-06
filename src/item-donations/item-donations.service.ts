@@ -24,7 +24,7 @@ export class ItemDonationsService {
      * @param createItemDonationDto The data for the new item donation.
      * @returns The newly created ItemDonation entity.
      */
-    async create(createItemDonationDto: CreateItemDonationDto): Promise<ItemDonation> {
+    async create(createItemDonationDto: CreateItemDonationDto): Promise<{donation: ItemDonation, item: Item}> {
         const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -45,7 +45,7 @@ export class ItemDonationsService {
 
             // Decrease the item quantity
             item.quantity -= quantity;
-            await queryRunner.manager.save(Item, item);
+            const savedItem = await queryRunner.manager.save(Item, item);
 
             // Create and save the new item donation
             const newItemDonation = this.itemDonationRepository.create({
@@ -58,7 +58,7 @@ export class ItemDonationsService {
             const savedDonation = await queryRunner.manager.save(ItemDonation, newItemDonation);
 
             await queryRunner.commitTransaction();
-            return savedDonation;
+            return {donation: savedDonation, item: savedItem};
         } catch (err) {
             await queryRunner.rollbackTransaction();
             throw err;
