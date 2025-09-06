@@ -23,7 +23,7 @@ export class Item {
   updatedAt: Date;
 
   // Relationships
-  @ManyToOne(() => Report, report => report.items)
+  @ManyToOne(() => Report, report => report.items, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'report_id' })
   report: Report;
 

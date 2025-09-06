@@ -15,7 +15,6 @@ export class ReportsService {
         @InjectRepository(StatusHistory)
         private readonly statusHistoryRepository: Repository<StatusHistory>,
       ) {}
-    // Fetch reports with all related statuses
     async getAllReports() {
         const reports = await this.reportRepository.find({
             relations: ['statusHistory', 'statusHistory.reportStatus'],
@@ -41,13 +40,13 @@ export class ReportsService {
         });
     }
 
-    // Create report + initial status
-    async createNewReport(dto: NewReportDto, userId: number) {
+    async create(dto: NewReportDto, userId: number) {
         const now = new Date();
 
         const report = this.reportRepository.create({
             geo_x: dto.geo_x,
             geo_y: dto.geo_y,
+            radius: dto.radius,
             createdBy: userId,
             createdAt: now,
             updatedAt: now,
@@ -55,10 +54,9 @@ export class ReportsService {
 
         const savedReport = await this.reportRepository.save(report);
 
-        // Add initial status = 1
         const initialStatus = this.statusHistoryRepository.create({
             report: savedReport,
-            statusId: 1,
+            statusId: 2,
             createdAt: now,
             updatedAt: now,
         });
@@ -68,7 +66,6 @@ export class ReportsService {
         return savedReport;
     }
 
-    // Update geo or status
     async updateReport(
         reportId: number,
         updateData: UpdateReportDto,

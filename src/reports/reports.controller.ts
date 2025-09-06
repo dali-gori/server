@@ -14,10 +14,18 @@ export class ReportsController {
     async getReports() {
         return this.reportsService.getAllReports();
     }
+
     @UseGuards(JwtAuthGuard, RoleGuard(2))
     @Post()
-    async createReport(@Body() dto: NewReportDto, @CurrentUser() user: { userId: number }) {
-        return this.reportsService.createNewReport(dto, user.userId);
+    async createReport(@Body() dto: NewReportDto, @CurrentUser() user: { userId: number; role: number }) {
+        console.log('👤 CreateReport - User:', user);
+        console.log('👤 CreateReport - User role:', user.role, 'Expected: 2');
+        
+        if (user.role !== 2) {
+            throw new Error('Insufficient permissions. Role 2 required.');
+        }
+        
+        return this.reportsService.create(dto, user.userId);
     }
   
     @UseGuards(JwtAuthGuard, RoleGuard(2))

@@ -6,4 +6,7 @@ export class NewReportDto {
 
   @IsNumber({}, { message: 'Географската ширина трябва да е число' })
   geo_y: number;
+
+  @IsNumber({}, { message: 'Радиусът трябва да е число' })
+  radius: number;
 }

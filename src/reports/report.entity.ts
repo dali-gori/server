@@ -14,6 +14,9 @@ export class Report {
   @Column({ type: 'float' })
   geo_y: number;
 
+  @Column({ type: 'int' })
+  radius: number;
+
   @Column({ name: 'created_by' })
   createdBy: number;
 
@@ -28,9 +31,9 @@ export class Report {
   @JoinColumn({ name: 'created_by' })
   creator: User;
 
-  @OneToMany(() => StatusHistory, statusHistory => statusHistory.report)
+  @OneToMany(() => StatusHistory, statusHistory => statusHistory.report, { onDelete: 'CASCADE' })
   statusHistory: StatusHistory[];
 
-  @OneToMany(() => Item, item => item.report)
+  @OneToMany(() => Item, item => item.report, { onDelete: 'CASCADE' })
   items: Item[];
 }

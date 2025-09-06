@@ -29,7 +29,7 @@ export class ItemDonation {
   updatedAt: Date;
 
   // Relationships
-  @ManyToOne(() => Item, item => item.donations)
+  @ManyToOne(() => Item, item => item.donations, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'item_id' })
   item: Item;
 

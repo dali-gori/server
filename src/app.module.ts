@@ -1,4 +1,4 @@
-(global as any).crypto = (global as any).crypto ?? require('crypto').webcrypto;
+// (global as any).crypto = (global as any).crypto ?? require('crypto').webcrypto;
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

@@ -24,7 +24,7 @@ export class StatusHistory {
   @JoinColumn({ name: 'status_id' })
   reportStatus: ReportStatus;
 
-  @ManyToOne(() => Report, report => report.statusHistory)
+  @ManyToOne(() => Report, report => report.statusHistory, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'report_id' })
   report: Report;
 }
