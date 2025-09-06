@@ -7,6 +7,7 @@ import {HomeMapModule} from "./home-map/home-map.module";
 import { ReportsModule } from './reports/reports.module';
 import {AuthModule} from "./auth/auth.module";
 import { ItemsModule } from './items/items.module';
+import { ItemDonationsModule } from './item-donations/item-donations.module';
 
 @Module({
   imports: [
@@ -41,7 +42,8 @@ import { ItemsModule } from './items/items.module';
     AuthModule,
     HomeMapModule,
     ReportsModule,
-    ItemsModule
+    ItemsModule,
+    ItemDonationsModule
   ],
 })
 export class AppModule {}
