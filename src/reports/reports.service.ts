@@ -30,6 +30,7 @@ export class ReportsService {
             return {
                 lat: report.geo_y,
                 lng: report.geo_x,
+                radius: report.radius,
                 statusText: latest?.reportStatus?.name ?? null,
                 statusHistory: report.statusHistory.map((history) => ({
                     created_at: history.createdAt,
