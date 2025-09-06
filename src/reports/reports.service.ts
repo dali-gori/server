@@ -33,6 +33,7 @@ export class ReportsService {
             return {
                 lat: report.geo_y,
                 lng: report.geo_x,
+                radius: report.radius,
                 statusText: latest?.reportStatus?.name ?? null,
                 latestStatusId: latest?.reportStatus?.id ?? null,
                 radius: report.radius,
