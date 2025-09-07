@@ -1,4 +1,4 @@
-(global as any).crypto = (global as any).crypto ?? require('crypto').webcrypto;
+// (global as any).crypto = (global as any).crypto ?? require('crypto').webcrypto;
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,8 @@ import {AuthModule} from "./auth/auth.module";
 import { ItemsModule } from './items/items.module';
 import { ItemDonationsModule } from './item-donations/item-donations.module';
 import { SavedLocationsModule } from './saved-locations/saved-locations.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -45,7 +47,9 @@ import { SavedLocationsModule } from './saved-locations/saved-locations.module';
     ReportsModule,
     ItemsModule,
     ItemDonationsModule,
-    SavedLocationsModule
+    SavedLocationsModule,
+    SubscriptionsModule,
+    StripeModule
   ],
 })
 export class AppModule {}

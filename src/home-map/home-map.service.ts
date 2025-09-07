@@ -27,8 +27,8 @@ export class HomeMapService {
             return { lat: parseFloat(latitude), lng: parseFloat(longitude), date: acq_date, time: acq_time, confidence: confidence };
         });
 
-        const report_data = await this.reportService.getAllReports();
-
+        //const report_data = await this.reportService.getAllReports();
+        const report_data = [];
         return { sat_data, report_data };
     }
 

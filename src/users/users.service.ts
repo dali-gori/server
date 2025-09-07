@@ -21,4 +21,16 @@ export class UsersService {
         return this.repo.findOne({ where: { id } });
     }
 
+    async saveStripeIds(
+        userId: string,
+        data: { stripeCustomerId?: string; stripeSubscriptionId?: string },
+      ) {
+        // idempotent update
+        await this.repo.update(userId, {
+          ...(data.stripeCustomerId && { stripeCustomerId: data.stripeCustomerId }),
+          ...(data.stripeSubscriptionId && {
+            stripeSubscriptionId: data.stripeSubscriptionId,
+          }),
+        });
+    }
 }
