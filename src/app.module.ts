@@ -10,7 +10,6 @@ import { ItemsModule } from './items/items.module';
 import { ItemDonationsModule } from './item-donations/item-donations.module';
 import { SavedLocationsModule } from './saved-locations/saved-locations.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
-import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -49,7 +48,6 @@ import { StripeModule } from './stripe/stripe.module';
     ItemDonationsModule,
     SavedLocationsModule,
     SubscriptionsModule,
-    StripeModule
   ],
 })
 export class AppModule {}
