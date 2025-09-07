@@ -32,8 +32,11 @@ export class User {
   @Column({ name: 'subscription_id', nullable: true })
   subscriptionId: number | null;
 
-  @Column({ name: 'payment_number', nullable: true })
-  paymentNumber: string;
+  @Column({ name: 'stripe_customer_id', nullable: true })
+  stripeCustomerId: string;
+
+  @Column({ name: 'stripe_subscription_id', nullable: true })
+  stripeSubscriptionId: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
