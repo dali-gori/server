@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SavedLocation } from './saved-location.entity';
@@ -19,9 +19,23 @@ export class SavedLocationsService {
 
   async create(userId: number, data: { name: string; geo_x: number; geo_y: number }): Promise<SavedLocation> {
       // Get user (includes plan and limit)
-      const user = await this.usersRepo.findOneByOrFail({ id: userId });
+      const user = await this.usersRepo
+        .createQueryBuilder('u')
+        .leftJoinAndSelect('u.subscription', 'subscription')
+        .where('u.id = :userId', { userId })
+        .getOne();
 
-      const limit = user.subscription.locations_limit; // <-- direct access
+      if (!user) throw new NotFoundException('User not found.');
+      if (!user.subscription) {
+        // Per your domain, every user should have a subscription
+        throw new InternalServerErrorException('User has no subscription assigned.');
+      }
+    
+      const limit = user.subscription.locations_limit;
+      if (limit == null) {
+        throw new InternalServerErrorException('Subscription limit not configured.');
+      }
+      
       const currentCount = await this.savedLocationRepo.count({ where: { userId } });
   
       if (currentCount >= limit) {

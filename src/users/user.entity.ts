@@ -60,6 +60,6 @@ export class User {
   @OneToMany(() => Device, device => device.user)
   devices: Device[];
 
-  @OneToMany(() => SavedLocation, sl => sl.user)
+  @OneToMany(() => SavedLocation, sl => sl.user, { eager: false })
   savedLocations: SavedLocation[];
 }

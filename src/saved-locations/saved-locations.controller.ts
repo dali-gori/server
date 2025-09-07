@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Delete, Body, Param, Req, ParseIntPipe } from '@nestjs/common';
 import { SavedLocationsService } from './saved-locations.service';
-import { Request } from 'express';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RoleGuard } from 'src/auth/roles.guard';
