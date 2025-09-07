@@ -16,6 +16,7 @@ export class ReportsService {
         @InjectRepository(StatusHistory)
         private readonly statusHistoryRepository: Repository<StatusHistory>,
       ) {}
+
     async getAllReports() {
         const reports = await this.reportRepository.find({
             relations: ['statusHistory', 'statusHistory.reportStatus', 'items', 'items.donations'],
@@ -31,9 +32,11 @@ export class ReportsService {
             const latest = sortedHistory[0];
     
             return {
+                id: report.id,
                 lat: report.geo_y,
                 lng: report.geo_x,
                 radius: report.radius,
+                statusId: latest.statusId,
                 statusText: latest?.reportStatus?.name ?? null,
                 latestStatusId: latest?.reportStatus?.id ?? null,
                 statusHistory: report.statusHistory.map((history) => ({
@@ -71,6 +74,70 @@ export class ReportsService {
         await this.statusHistoryRepository.save(initialStatus);
 
         return savedReport;
+    }
+
+    async delete(id: number) {
+        const report = await this.reportRepository.findOne({ where: { id } });
+        
+        if (!report) {
+            throw new Error('Report not found');
+        }
+
+        await this.reportRepository.remove(report);
+        return { message: 'Report deleted successfully' };
+    }
+
+    async updateReportStatus(reportId: number, statusId: number) {
+        const now = new Date();
+
+        const report = await this.reportRepository.findOne({ where: { id: reportId } });
+        if (!report) {
+            throw new Error('Report not found');
+        }
+
+        // Update the statusId on the report itself (if such a field exists)
+        // If the report entity does not have a statusId, this will be a no-op
+        if ('statusId' in report) {
+            report.statusId = statusId;
+        }
+
+        // Add a new status history entry
+        const statusHistory = this.statusHistoryRepository.create({
+            report,
+            statusId,
+            createdAt: now,
+            updatedAt: now,
+        });
+
+        await this.statusHistoryRepository.save(statusHistory);
+
+        report.updatedAt = now;
+        await this.reportRepository.save(report);
+
+        return { message: 'Report status updated successfully' };
+    }
+
+    async updateReportLocationAndRadius(
+        reportId: number,
+        geo_x: number,
+        geo_y: number,
+        radius: number
+    ) {
+        const now = new Date();
+
+        const report = await this.reportRepository.findOne({ where: { id: reportId } });
+        if (!report) {
+            throw new Error('Report not found');
+        }
+
+        report.geo_x = geo_x;
+        report.geo_y = geo_y;
+        report.radius = radius;
+        report.updatedAt = now;
+
+        await this.reportRepository.save(report);
+
+        return { message: 'Report location and radius updated successfully' };
     }
 
     async updateReport(

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { NewReportDto } from './dtos/newReportModel.dto';
 import { CurrentUser } from 'src/auth/current-user.decorator';
@@ -18,12 +18,6 @@ export class ReportsController {
     @UseGuards(JwtAuthGuard, RoleGuard(2))
     @Post()
     async createReport(@Body() dto: NewReportDto, @CurrentUser() user: { userId: number; role: number }) {
-        console.log('👤 CreateReport - User:', user);
-        console.log('👤 CreateReport - User role:', user.role, 'Expected: 2');
-        
-        if (user.role !== 2) {
-            throw new Error('Insufficient permissions. Role 2 required.');
-        }
         
         return this.reportsService.create(dto, user.userId);
     }
@@ -36,4 +30,42 @@ export class ReportsController {
     ) {
       return this.reportsService.updateReport(id, body);
     }
+
+    @UseGuards(JwtAuthGuard, RoleGuard(2))
+    @Patch(':id/status')
+    async updateReportStatus(
+      @Param('id') id: number,
+      @Body('statusId') statusId: number,
+    ) {
+      if (!statusId) {
+        throw new Error('statusId is required');
+      }
+      return this.reportsService.updateReportStatus(id, statusId);
+    }
+
+    @UseGuards(JwtAuthGuard, RoleGuard(2))
+    @Patch(':id/location')
+    async updateReportLocationAndRadius(
+      @Param('id') id: number,
+      @Body() body: { geo_x: number; geo_y: number; radius: number },
+    ) {
+      if (
+        body.geo_x === undefined ||
+        body.geo_y === undefined ||
+        body.radius === undefined
+      ) {
+        throw new Error('geo_x, geo_y, and radius are required');
+      }
+      return this.reportsService.updateReportLocationAndRadius(id, body.geo_x, body.geo_y, body.radius);
+    }
+
+    @UseGuards(JwtAuthGuard, RoleGuard(2))
+    @Delete(':id')
+    async deleteReport(
+      @Param('id') id: number,
+      @CurrentUser() user: { userId: number; role: number }
+    ) {
+      var report = await this.reportsService.delete(id);
+      return report;
+      }
 }

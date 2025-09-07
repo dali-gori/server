@@ -19,7 +19,6 @@ export class StatusHistory {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  // Relationships
   @ManyToOne(() => ReportStatus, reportStatus => reportStatus.statusHistory)
   @JoinColumn({ name: 'status_id' })
   reportStatus: ReportStatus;
