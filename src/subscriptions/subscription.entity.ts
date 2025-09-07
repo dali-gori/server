@@ -12,6 +12,9 @@ export class Subscription {
   @Column({ unique: true })
   name: string;
 
+  @Column({ name: 'locations_limit', nullable: true })
+  locations_limit: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
