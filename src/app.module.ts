@@ -9,8 +9,8 @@ import {AuthModule} from "./auth/auth.module";
 import { ItemsModule } from './items/items.module';
 import { ItemDonationsModule } from './item-donations/item-donations.module';
 import { SavedLocationsModule } from './saved-locations/saved-locations.module';
-// import { SubscriptionsModule } from './subscriptions/subscriptions.module';
-// import { StripeModule } from './stripe/stripe.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -48,8 +48,8 @@ import { SavedLocationsModule } from './saved-locations/saved-locations.module';
     ItemsModule,
     ItemDonationsModule,
     SavedLocationsModule,
-    // SubscriptionsModule,
-    // StripeModule
+    SubscriptionsModule,
+    StripeModule
   ],
 })
 export class AppModule {}
