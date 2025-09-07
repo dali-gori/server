@@ -15,10 +15,14 @@ export class ReportsController {
         return this.reportsService.getAllReports();
     }
 
+    @Get(':id')
+    async getOneReport(@Param("id") id: number) {
+        return this.reportsService.getReportById(id);
+    }
+
     @UseGuards(JwtAuthGuard, RoleGuard(2))
     @Post()
     async createReport(@Body() dto: NewReportDto, @CurrentUser() user: { userId: number; role: number }) {
-        
         return this.reportsService.create(dto, user.userId);
     }
   

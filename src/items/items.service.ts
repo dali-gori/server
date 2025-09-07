@@ -10,7 +10,7 @@ export class ItemsService {
   constructor(
     @InjectRepository(Item)
     private readonly itemRepo: Repository<Item>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Item[]> {
     return this.itemRepo.find({
@@ -33,11 +33,11 @@ export class ItemsService {
     const now = new Date();
 
     const item = this.itemRepo.create({
-        reportId: dto.reportId,
-        name: dto.name,
-        quantity: dto.quantity,
-        createdAt: now,
-        updatedAt: now,
+      reportId: dto.reportId,
+      name: dto.name,
+      quantity: dto.quantity,
+      createdAt: now,
+      updatedAt: now,
     });
     const savedItem = await this.itemRepo.save(item); // save single entity
     return savedItem; // TypeScript now knows this is Item
@@ -49,7 +49,7 @@ export class ItemsService {
     return this.itemRepo.save(item);
   }
 
-  async remove(id: number): Promise<void>{
+  async remove(id: number): Promise<void> {
     const item = await this.findOne(id);
     await this.itemRepo.remove(item);
   }
