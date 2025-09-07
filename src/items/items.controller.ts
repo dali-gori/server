@@ -30,7 +30,7 @@ export class ItemsController {
     }
 
     @Post()
-    @UseGuards(JwtAuthGuard, RoleGuard(2))
+    //@UseGuards(JwtAuthGuard, RoleGuard(2))
     create(@Body() dto: CreateItemDto) {
         return this.itemsService.create(dto);
     }

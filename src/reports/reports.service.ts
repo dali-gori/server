@@ -49,6 +49,44 @@ export class ReportsService {
             };
         });
     }
+    
+    async getReportById(id: number) {
+        const report = await this.reportRepository.findOne({
+            where: { id },
+            relations: [
+                'statusHistory',
+                'statusHistory.reportStatus',
+                'items',
+                'items.donations',
+            ],
+        });
+    
+        if (!report) {
+            return null; // or throw an error if you prefer
+        }
+    
+        // sort histories by createdAt to get the latest
+        const sortedHistory = [...report.statusHistory].sort(
+            (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+        );
+        const latest = sortedHistory[0];
+    
+        return {
+            id: report.id,
+            lat: report.geo_y,
+            lng: report.geo_x,
+            radius: report.radius,
+            statusId: latest?.statusId ?? null,
+            statusText: latest?.reportStatus?.name ?? null,
+            latestStatusId: latest?.reportStatus?.id ?? null,
+            statusHistory: report.statusHistory.map((history) => ({
+                created_at: history.createdAt,
+                reportStatus: history.reportStatus?.name,
+                reportStatusId: history.statusId,
+            })),
+            items: report.items,
+        };
+    }
 
     async create(dto: NewReportDto, userId: number) {
         const now = new Date();

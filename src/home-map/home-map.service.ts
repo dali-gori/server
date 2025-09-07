@@ -17,6 +17,8 @@ export class HomeMapService {
             `${process.env.FIRMS_API_KEY}/${process.env.NASA_DATA_SOURCE}/` +
             `${west},${south},${east},${north}/2`;
 
+        console.log(url);
+
         const response = await fetch(url);
         const csv = await response.text();
 
